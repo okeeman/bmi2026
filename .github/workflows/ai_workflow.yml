@@ -1,4 +1,4 @@
-Yamlname: Build and Deploy .NET Web App to Azure
+name: Build and Deploy .NET Web App to Azure
 
 on:
   push:
