@@ -11,8 +11,8 @@ env:
 
 on:
  workflow_dispatch:                                #  workflow_dispatch for manually triggered
- push:                                             
-   branches: [ master ]
+ #push:                                             
+   #branches: [ master ]
  
 
 jobs:
