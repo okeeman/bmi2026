@@ -6,6 +6,8 @@ env:
   
   AZURE_WEBAPP_PACKAGE_PATH: 'bmi2021\published'        # set this to the path to your web app project
 
+  ACTIONS_STEP_DEBUG: true
+
 
 on:
  workflow_dispatch:                                #  workflow_dispatch for manually triggered
