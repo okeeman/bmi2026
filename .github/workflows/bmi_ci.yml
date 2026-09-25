@@ -26,11 +26,8 @@ jobs:
         dotnet-version: 10.0.x
     - name: Build for Release                          # Step 3 of job build.
       run: dotnet build --configuration Release
+
   
-  unit-test:                                           # "unit-test" job
-    needs: build
-    runs-on: windows-latest 
-    steps: 
     - name: Run unit tests
       run: dotnet test bmiUnitTestProject/bmiUnitTestProject.csproj --no-restore --collect "Code coverage" -l:trx
     - name: Publish Unit Test Results
@@ -40,11 +37,8 @@ jobs:
         name: MS Tests                  
         path: '**.trx'
         reporter: 'dotnet-trx'                     
+
   
-  publish-to-azure:
-    needs: unit-test
-    runs-on: windows-latest 
-    steps:
     - name: Publish
       #run: dotnet publish -c Release --property:PublishDir=${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
