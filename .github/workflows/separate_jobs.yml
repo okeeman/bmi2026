@@ -1,4 +1,4 @@
-name: BMI_CI                                            # "BMI_CI" workflow, name is optional
+name: Separate jobs                                           # name is optional
 
 env:
   AZURE_WEBAPP_NAME: bmi202620260925161550              # set this to your application's name
