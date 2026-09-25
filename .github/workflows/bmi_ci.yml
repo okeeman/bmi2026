@@ -3,10 +3,10 @@ name: BMI_CI                                        # "BMI_CI" workflow, name is
 env:
   #AZURE_WEBAPP_NAME: gc-bmicalculator-ga            # set this to your application's name
   AZURE_WEBAPP_NAME: bmi202620260923201859                    # set this to your application's name
-  
-  AZURE_WEBAPP_PACKAGE_PATH: 'bmi2021\published'        # set this to the path to your web app project
-
+  AZURE_WEBAPP_PACKAGE_PATH: 'bmi2026\published'        # set this to the path to your web app project
   ACTIONS_STEP_DEBUG: true
+  CONFIGURATION: Release
+  WORKING_DIRECTORY: bmi2026
 
 
 on:
@@ -38,7 +38,8 @@ jobs:
         reporter: 'dotnet-trx'                     
 
     - name: Publish
-      run: dotnet publish -c Release --property:PublishDir=${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      #run: dotnet publish -c Release --property:PublishDir=${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
       
 
 # Deploy to Azure Web apps
