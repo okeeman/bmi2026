@@ -1,0 +1,78 @@
+name: Separate jobs                                           # name is optional
+
+env:
+  AZURE_WEBAPP_NAME: bmi202620260925161550              # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: 'bmi2021\published'        # set this to the path to your web app project
+  ACTIONS_STEP_DEBUG: true
+  CONFIGURATION: Release
+  WORKING_DIRECTORY: bmi2021
+
+
+on:
+ workflow_dispatch:                                     #  workflow_dispatch for manually triggered
+ push:                                             
+   branches: [ master ]
+ 
+
+jobs:
+  # this is the first job in this workflow.
+  build:                                               # "build" job
+    runs-on: windows-latest                            # runner
+    steps:
+    - name: Checkout code.                             # Step 1 of job build.
+      uses: actions/checkout@v5
+    - name: Setup .NET                                 # Step2 of job build.
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+    - name: Build for Release                          # Step 3 of job build.
+      run: dotnet build --configuration Release
+
+  #this is the second job in this workflow.
+  unit-test:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Run unit tests
+        run: dotnet test bmiUnitTestProject/bmiUnitTestProject.csproj --configuration Release --collect "Code coverage" -l:trx
+
+      - name: Publish Unit Test Results
+        if: always()
+        uses: dorny/test-reporter@v3
+        with:
+          name: MS Tests
+          path: '**/*.trx'
+          reporter: dotnet-trx                     
+
+  # this is the third job in this workflow.
+  publish-to-azure:
+    needs: unit-test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish
+        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" `
+          --configuration "${{ env.CONFIGURATION }}" `
+          --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

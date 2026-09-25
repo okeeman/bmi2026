@@ -1,1 +1,3 @@
-![example workflow](https://github.com/gclynch/bmi2022/actions/workflows/bmi_ci.yml/badge.svg)
+[![BMI_CI](https://github.com/okeeman/bmi2026/actions/workflows/bmi_ci.yml/badge.svg)](https://github.com/okeeman/bmi2026/actions/workflows/bmi_ci.yml)
+
+[![Separate jobs](https://github.com/okeeman/bmi2026/actions/workflows/separate_jobs.yml/badge.svg)](https://github.com/okeeman/bmi2026/actions/workflows/separate_jobs.yml)
