@@ -28,6 +28,7 @@ jobs:
       run: dotnet build --configuration Release
   
   unit-test:                                           # "unit-test" job
+    needs: build
     runs-on: windows-latest 
     steps: 
     - name: Run unit tests
@@ -41,6 +42,7 @@ jobs:
         reporter: 'dotnet-trx'                     
   
   publish-to-azure:
+    needs: unit-test
     runs-on: windows-latest 
     steps:
     - name: Publish
