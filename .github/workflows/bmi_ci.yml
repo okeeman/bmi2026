@@ -41,7 +41,7 @@ jobs:
         path: '**.trx'
         reporter: 'dotnet-trx'   
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v7
       with:
         name: mstest-results
         path: '**/test_results.trx'
