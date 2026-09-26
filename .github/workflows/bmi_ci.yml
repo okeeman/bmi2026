@@ -31,12 +31,20 @@ jobs:
     - name: Run unit tests
       run: dotnet test bmiUnitTestProject/bmiUnitTestProject.csproj --no-restore --collect "Code coverage" -l:trx
     - name: Publish Unit Test Results
+      #  Displays directly in GitHub.
       uses: dorny/test-reporter@v3
       with:
         artifact: ''
-        name: MS Tests                  
+        name: MS Tests        
+        # * is a simple, non-recursive wildcard representing zero or more characters which you can use for paths and file names.
+        # ** is a recursive wildcard which can only be used with paths, not file names.
         path: '**.trx'
-        reporter: 'dotnet-trx'                     
+        reporter: 'dotnet-trx'   
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: mstest-results
+        path: '**/test_results.trx'
 
   
     - name: Publish
