@@ -1,4 +1,4 @@
-name: Separate jobs                                           # name is optional
+name: Separate jobs                                     # name is optional
 
 env:
   AZURE_WEBAPP_NAME: bmi202620260925161550              # set this to your application's name
@@ -18,13 +18,16 @@ jobs:
   # this is the first job in this workflow.
   build:                                               # "build" job
     runs-on: windows-latest                            # runner
+    
     steps:
     - name: Checkout code.                             # Step 1 of job build.
       uses: actions/checkout@v5
+      
     - name: Setup .NET                                 # Step2 of job build.
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
+        
     - name: Build for Release                          # Step 3 of job build.
       run: dotnet build --configuration Release
 
@@ -42,7 +45,10 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Run unit tests
-        run: dotnet test bmiUnitTestProject/bmiUnitTestProject.csproj --configuration Release --collect "Code coverage" -l:trx
+         # Use back tick to put flags on separate lines for legibility. Don't put a comment after the back-tick.
+        run: dotnet test bmiUnitTestProject/bmiUnitTestProject.csproj `
+          --configuration Release `
+          --collect "Code coverage" -l:trx
 
       - name: Publish Unit Test Results
         if: always()
@@ -54,8 +60,10 @@ jobs:
 
   # this is the third job in this workflow.
   publish-to-azure:
+    # The job needs () and runs on (). Jobs run in parallel by default.
     needs: unit-test
     runs-on: windows-latest
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
